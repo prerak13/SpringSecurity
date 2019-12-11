@@ -18,14 +18,29 @@ import com.example.demo.modelAndRepo.VehicleRepo;
 import com.example.demoException.RecordNotFoundException;
 
 @RestController
-@RequestMapping("/vehicles")
+@RequestMapping()
 public class VehicleController {
 
 	@Autowired
 	@Qualifier("p")
 	VehicleRepo repo;
-
-    @GetMapping("/qq")
+	 
+	@GetMapping()
+	    public ResponseEntity<String> publicAccess() {
+	        
+	        return new ResponseEntity<String>("API EXPOSED TO ALL USERS", new HttpHeaders(), HttpStatus.OK);
+	    }
+	@GetMapping("/user")
+    public ResponseEntity<String> userAccess() {
+        
+        return new ResponseEntity<String>("API EXPOSED TO just USERS", new HttpHeaders(), HttpStatus.OK);
+    }
+	@GetMapping("/admin")
+    public ResponseEntity<String> adminAccess() {
+        
+        return new ResponseEntity<String>("<h1>API EXPOSED TO Admin</h1>", new HttpHeaders(), HttpStatus.OK);
+    }
+    @GetMapping("/getAllEmployees")
     public ResponseEntity<List<VehicleModel>> getAllEmployees() {
         List<VehicleModel> list = repo.findAll();
         return new ResponseEntity<List<VehicleModel>>(list, new HttpHeaders(), HttpStatus.OK);
