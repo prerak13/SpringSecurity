@@ -14,15 +14,19 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
+
+import com.example.demoException.RecordNotFoundException;
 @EnableWebSecurity
 public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource ds;
 	
-	
+	 @Autowired
+	 UserDetailsService userDetailsService;
+	 
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	auth.userDetailsService((s)->new MyUserDetail(s));
+	 auth.userDetailsService(userDetailsService);
 }
 
 
