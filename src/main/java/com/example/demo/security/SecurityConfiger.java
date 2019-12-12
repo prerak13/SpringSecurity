@@ -9,17 +9,22 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.security.crypto.password.NoOpPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 @EnableWebSecurity
 public class SecurityConfiger extends WebSecurityConfigurerAdapter {
 	@Autowired
 	DataSource ds;
+	
+	
 @Override
 protected void configure(AuthenticationManagerBuilder auth) throws Exception {
-	auth.jdbcAuthentication()
-	.dataSource(ds);
+	auth.userDetailsService((s)->new MyUserDetail(s));
 }
+
 
 @Bean
 public PasswordEncoder func() {
@@ -29,11 +34,9 @@ public PasswordEncoder func() {
 
 @Override
 	protected void configure(HttpSecurity http) throws Exception {
-		// TODO Auto-generated method stub
-//		super.configure(http);
 		http.authorizeRequests()
 		.antMatchers("/admin").hasAuthority("ADMIN")
-		.antMatchers("/user").hasAnyAuthority("USER","ADMIN")
+		.antMatchers("/user").hasAnyAuthority("ROLE_USER","ADMIN")
 		.antMatchers("/").permitAll()
 		.and().formLogin().and().csrf().disable();
 	}
